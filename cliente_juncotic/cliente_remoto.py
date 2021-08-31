@@ -1,56 +1,59 @@
 import socket, argparse
 
-# hello|<nombre>
-# email|<correo_electronico>
-# key|<clave_hardodeada>
-# exit
+
 FORMAT = 'utf-8'
 HOST = str(socket.gethostbyname(socket.gethostname()))
 
-# 200: OK
-# 400: Comando válido, pero fuera de secuencia.
-# 500: Comando inválido.
-# 404: Clave errónea.
-# 405: Cadena nula.
+
 
 def send():
+    stage = 0
     while True:
-        name = 'hello|' +  str(input("Nombre: "))
-        cliente.send(name.encode(FORMAT))
+        if stage == 0:
+            name = 'hello|' +  str(input("Nombre: "))
+            cliente.send(name.encode(FORMAT))
 
-        resp = cliente.recv(512).decode(FORMAT)
-        if resp != "200":
-            print(resp + ': Comando válido, pero fuera de secuencia.')
-        else:
-            print('200: OK')
+            resp = cliente.recv(512).decode(FORMAT)
+            if resp != "200":
+                print(resp + ': Comando válido, pero fuera de secuencia.')
+            else:
+                stage += 1
+                print('200: OK')
 
-        email = 'email|' + str(input("Correo electrónico: "))
-        cliente.send(email.encode(FORMAT))
+        if stage == 1:
+            email = 'email|' + str(input("Correo electrónico: "))
+            cliente.send(email.encode(FORMAT))
 
-        resp = cliente.recv(512).decode(FORMAT)
-        if resp != "200":
-            print(resp + ': Comando válido, pero fuera de secuencia.')
-        else:
-            print('200: OK')
-           
-        key = 'key|' + str(input("Ingrese clave: "))
-        cliente.send(key.encode(FORMAT))
+            resp = cliente.recv(512).decode(FORMAT)
+            if resp != "200":
+                print(resp + ': Comando válido, pero fuera de secuencia.')
+            else:
+                stage += 1
+                print('200: OK')
 
-        resp = cliente.recv(512).decode(FORMAT)
-        if resp != "200":
-            print(resp + ': Clave errónea.')
-        else:
-            print('200: OK')
+        if stage == 2:
+            key = 'key|' + str(input("Ingrese clave: "))
+            cliente.send(key.encode(FORMAT))
 
-        fin = str(input("Ingrese el comando para abandonar la sesión: "))
-        cliente.send(fin.encode(FORMAT))
-        
-        resp = cliente.recv(512).decode(FORMAT)
-        if resp != "200":
-            print(resp + ': Comando inválido.')
-        else:
-            print('200: OK')
-            break
+            resp = cliente.recv(512).decode(FORMAT)
+            if resp != "200":
+                print(resp + ': Clave errónea.')
+            else:
+                stage += 1
+                print('200: OK')
+
+        if stage == 3:
+            fin = str(input("Ingrese el comando para abandonar la sesión: "))
+            cliente.send(fin.encode(FORMAT))
+            
+            resp = cliente.recv(512).decode(FORMAT)
+            if resp != "200":
+                print(resp + ': Comando inválido.')
+            else:
+                stage += 1
+                print('200: OK')
+                cliente.close()
+                break
 
 
 parser = argparse.ArgumentParser(add_help=False)
