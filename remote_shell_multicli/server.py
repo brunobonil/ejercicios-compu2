@@ -12,6 +12,9 @@ def manejo_cliente(conn, address):
     print(f'Nueva conexión: {address}')
     while True:
         command = conn.recv(2048).decode('utf-8')
+        if command == 'exit':
+            conn.close()
+            break
         out = subprocess.run(command.split(), capture_output=True)
         if out.returncode != 0:
             conn.send(bytes((f'[ERROR]\n{out.stderr.decode("utf-8")}'), 'utf-8'))

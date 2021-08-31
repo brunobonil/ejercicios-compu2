@@ -12,6 +12,10 @@ cliente.connect((SERVER, PORT))
 def enviar():
     while True:
         mensaje = input("Ingrese el comando: ")
+        if mensaje == 'exit':
+            print('Se ha finalizado la conexión')
+            cliente.close()
+            break
         cliente.send(mensaje.encode('utf-8'))
         output = cliente.recv(2048).decode('utf-8')
         print(output)
