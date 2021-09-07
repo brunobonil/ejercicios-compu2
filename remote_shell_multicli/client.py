@@ -14,6 +14,7 @@ def enviar():
         mensaje = input("Ingrese el comando: ")
         if mensaje == 'exit':
             print('Se ha finalizado la conexión')
+            cliente.send(mensaje.encode('utf-8'))
             cliente.close()
             break
         cliente.send(mensaje.encode('utf-8'))

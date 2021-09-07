@@ -13,13 +13,13 @@ def manejo_cliente(conn, address):
     while True:
         command = conn.recv(2048).decode('utf-8')
         if command == 'exit':
-            conn.close()
+            server.close()
             break
         out = subprocess.run(command.split(), capture_output=True)
         if out.returncode != 0:
-            conn.send(bytes((f'[ERROR]\n{out.stderr.decode("utf-8")}'), 'utf-8'))
+            conn.send(bytes((f'\n[ERROR]\n{out.stderr.decode("utf-8")}'), 'utf-8'))
         else:
-            conn.send(bytes((f'[OK]\n{out.stdout.decode("utf-8")}'), 'utf-8'))
+            conn.send(bytes((f'\n[OK]\n{out.stdout.decode("utf-8")}'), 'utf-8'))
 
 
 def start():
@@ -31,3 +31,4 @@ def start():
 
 print("*SERVIDOR INICIALIZADO*")
 start()
+
