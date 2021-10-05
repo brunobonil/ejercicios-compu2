@@ -4,7 +4,6 @@ import os
 
 SERVER = '0.0.0.0'
 
-
 def tcp():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((SERVER, args.port))

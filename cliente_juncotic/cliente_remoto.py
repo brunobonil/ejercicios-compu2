@@ -5,7 +5,6 @@ FORMAT = 'utf-8'
 HOST = str(socket.gethostbyname(socket.gethostname()))
 
 
-
 def send():
     stage = 0
     while True:
