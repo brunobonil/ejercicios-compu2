@@ -1,39 +1,42 @@
-import socket
+from asyncio.runners import run
 import subprocess
 import asyncio
 
 
 PORT = 8080
-SERVER = socket.gethostbyname(socket.gethostname())
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((SERVER, PORT))
-
-async def manejo_cliente(conn, address):
-    print(f'Nueva conexión: {address}')
-    while True:
-        command = conn.recv(2048).decode('utf-8')
-        if command == 'exit':
-            server.close()
-            break
-        out = subprocess.run(command.split(), capture_output=True)
-        if out.returncode != 0:
-            conn.send(bytes((f'\n[ERROR]\n{out.stderr.decode("utf-8")}'), 'utf-8'))
-        else:
-            conn.send(bytes((f'\n[OK]\n{out.stdout.decode("utf-8")}'), 'utf-8'))
+SERVER = 'localhost'
 
 
-def start():
-    server.listen()
-    while True:
-        conn, address = server.accept()
+async def manejo_conexion(lector, escritor):
+    conn = True
+    while conn:
+        connection = await manejo_cliente(lector, escritor)
+
+
+async def manejo_cliente(lector, escritor):
+    print(f'Nueva conexión')
+    
+    command = await lector.read(1024)
+    if command == 'exit':
+        return None
+        
+    out = subprocess.run(command.split(), capture_output=True)
+    if out.returncode != 0:
+        escritor.write(bytes((f'\n[ERROR]\n{out.stderr.decode("utf-8")}'), 'utf-8'))
+        await escritor.drain()
+    else:
+        escritor.write(bytes((f'\n[OK]\n{out.stdout.decode("utf-8")}'), 'utf-8'))
+        await escritor.drain()
+
+    return lector
+
 
 async def main():
-        PORT = 8080
-        SERVER = socket.gethostbyname(socket.gethostname())
+    
+    server = await asyncio.start_server(manejo_conexion, SERVER, PORT)
+    
+    async with server:
+        await server.serve_forever()
 
 if __name__ == '__main__':
-
-    print("*SERVIDOR INICIALIZADO*")
     asyncio.run(main())
-

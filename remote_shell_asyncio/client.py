@@ -3,8 +3,9 @@ import argparse
 import os
 import datetime
 
-SERVER = socket.gethostbyname(socket.gethostname())
+
 PORT = 8080
+SERVER = 'localhost'
 
 cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 cliente.connect((SERVER, PORT))
