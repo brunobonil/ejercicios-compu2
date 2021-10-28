@@ -8,6 +8,6 @@ async def primera(n: int) -> str:
     print(f"Retornando primera({n}) == {result}.")
     return result
 
-# Es un corrutina que recibe un parámetro 'n' (int) y devuelve un string
+## Es un corrutina que recibe un parámetro 'n' (int) y devuelve un string
 
 # Función segunda
