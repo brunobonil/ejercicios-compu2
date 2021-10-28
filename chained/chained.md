@@ -42,3 +42,8 @@ async def chain(n: int) -> None:
 
 ## Función "main"
 
+Esta corrutina recibe como parámetro '*args' y ejecuta las corrutinas definidas dentro de asyncio.gather()
+```
+async def main(*args):
+    await asyncio.gather(*(chain(n) for n in args))
+```
