@@ -1,4 +1,9 @@
-#
+Función 'primera'
+
+##Es un corrutina que recibe un parámetro 'n' (int) y devuelve un string
+
+#Función segunda
+
 
 async def primera(n: int) -> str:
     i = random.randint(0, 10)
